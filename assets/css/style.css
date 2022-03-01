@@ -1,7 +1,14 @@
 * {
+    box-sizing: border-box;
+    color: rgb(238, 234, 234);
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(87deg, rgba(131,58,180,1) 26%, rgba(69,124,252,1) 67%);
+    background: rgb(131,58,180);
 }
 
 ul {
@@ -16,6 +23,7 @@ ul {
 }
 
 .panel__excursions {
+    height: max-content;
     width: 70%;
 }
 
@@ -24,22 +32,217 @@ ul {
     flex-wrap: wrap;
 }
 
+
 .excursions__item {
-    border: 1px solid #bbb;
-    border-radius: 5px;
+    background: rgb(36, 108, 196);
+    border-radius: 20px;
+    box-shadow: rgb(17, 17, 17) 0px 0px 15px 1px;
+    display: flex ;
+    flex-wrap: wrap;
+    justify-content: center;  
+    line-height: 1.5;
     margin: 10px;
     padding: 20px;
     width: calc(50% - 20px);
 }
 
+.excursions__title {
+    background-color: rgb(56, 34, 117);
+    border-radius: 10px;
+    box-shadow: 0px 0px 8px 1px;
+    display: flex;
+    font-size: 40px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.excursions__form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.excursions__field {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.excursions__field-name {
+    background: rgb(14, 84, 170);
+    border-radius: 10px;
+    box-shadow: silver 0px 0px 3px 1px ;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    margin: 7px 0;
+    padding: 5px;
+    width: 70%;
+}
+
+.excursions__field-input {
+    background-color: rgba(0, 0, 0, 0.253);
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    outline: none;
+    text-align: center;
+    width: 15%;
+}
+
+.excursions__field-input--submit {
+    background-color: rgb(112, 68, 153);
+    border-radius: 20px;
+    border: none;
+    box-shadow: silver 0px 0px 3px 1px ;
+    color: rgb(250, 250, 246);
+    padding: 12px;
+    width: max-content;
+}
+
+.excursions__field-input--submit:hover, .order__field-input--order:hover {
+    box-shadow: 0px 0px 10px 1px;
+    transition: 100ms;
+}
+
+.excursions__field-input--submit:active, .order__field-input--order:active {
+    transform: translateY(4px);
+}
+
+.excursions__item--prototype {
+    display: none;
+}
+
 .panel__form {
     background-color: #f4f4f4;
+    background-color: rgb(71, 20, 119);
+    border-radius: 20px;
+    box-shadow: rgb(17, 17, 17) 0px 0px 15px 1px;
+    height: max-content;
     padding: 20px;
     width: 30%;
 }
 
+.panel__order {
+    display: none;
+}
+
+.panel__order--active {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px 0;
+}
+
 .uploader, .order {
     border-bottom: 1px solid #bbb;
+}
+
+.order__field-input {
+    background-color: rgba(0, 0, 0, 0.253);
+    outline: none;
+}
+
+.summary__item {
+    display: block;
+    padding: 10px;
+}
+
+.summary__title {
+    margin-bottom: 5px;
+}
+
+.summary__item--prototype {
+    display: none;
+}
+
+.summary__prices {
+    list-style-position: inside;
+    list-style: square;
+}
+
+.childPrice, .adultPrice {
+    padding-left: 20px;
+}
+
+.summary__btn-remove {
+    color: rgba(255, 0, 0, 0.603);
+    font-size: 15px;
+    text-decoration: none;
+    vertical-align: text-top;
+}
+
+.order__field-input--order{
+    background-color: rgb(14, 84, 170);
+    border-radius: 20px;
+    border: none;
+    box-shadow: silver 0px 0px 3px 1px ;
+    color: rgba(255, 255, 255, 0.849);
+    display: flex;
+    font-size: 20px;
+    font-weight: bold ;
+    justify-content: center;
+    padding: 10px 30px;
+    padding: 12px;
+    width: max-content;
+}
+
+.order__field--submit {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.wrong_value_text {
+    background: rgb(14, 84, 170);
+    border-radius: 10px;
+    color: rgb(244 96 96);
+    font-size: 15px;
+    padding: 0 10px;
+}
+
+.excursions__description {
+    text-align: justify;
+}
+
+.error__field {
+    height: 20px;
     margin-bottom: 20px;
-    padding-bottom: 20px;
+}
+
+.order__total-price {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 0 auto;
+}
+.order__field-name {
+    display: flex;
+    justify-content: space-between;
+}
+
+.uploader {
+    padding-bottom: 10px;
+}
+
+.error__field-panel {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.error__field-panel > p {
+    color: rgb(244 96 96);
+    font-size: 15px;
+}
+
+.uploader__label {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
 }
