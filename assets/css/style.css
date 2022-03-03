@@ -8,7 +8,6 @@
 
 body {
     background: linear-gradient(87deg, rgba(131,58,180,1) 26%, rgba(69,124,252,1) 67%);
-    background: rgb(131,58,180);
 }
 
 ul {
@@ -246,3 +245,11 @@ ul {
     gap: 20px;
     padding: 20px;
 }
+
+
+
+.error_border_color {
+    border: solid rgb(229 15 15);
+}
+
+

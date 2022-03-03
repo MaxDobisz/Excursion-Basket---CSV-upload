@@ -1,276 +1,333 @@
-const uploadExcursions = function(e) {
+const uploadButton = document.querySelector('.uploader__input');
+uploadButton.addEventListener('change', uploadCsvFile);
+
+const excursionsList = document.querySelector('.excursions');
+excursionsList.addEventListener('click', excursionItemInputsValidation, true);
+
+const panelForm = document.querySelector('.panel__form'); 
+panelForm.addEventListener('click', removeSummaryItem, true);
+panelForm.addEventListener('click', submitDetailsValidation, true);
+
+function uploadCsvFile(e) {
     const uploadedFile = e.target.files[0];
     const reader = new FileReader();
     reader.onload = function(readerEvent) {
         const uploadedCsv = readerEvent.target.result;
-        addExcursions(uploadedCsv);
+        splitCsv(uploadedCsv);
     }
     reader.readAsText(uploadedFile, 'UTF-8');
 }
 
-const addExcursions = function (csvFile) {
-    const splitedCsvByRow = splitTxtByRow(csvFile);
-    splitedCsvByRow.forEach(function(splitedCsvByRow) {
-        const splitedCsvByEl = splitTxtByEl(splitedCsvByRow);
-        const newExcursion = createExcursionEl(splitedCsvByEl[2], splitedCsvByEl[3], splitedCsvByEl[4], splitedCsvByEl[5]);
-        addNewExcursionEl(newExcursion);
+function splitCsv(csvFile) {
+    const csvSplitedByRow = splitTxtByRow(csvFile);
+    csvSplitedByRow.forEach(function(csvSplitedByRow) {
+        const splitedCsvByEl = splitTxtByEl(csvSplitedByRow);
+        createExcursionItem(splitedCsvByEl[2], splitedCsvByEl[3], splitedCsvByEl[4], splitedCsvByEl[5]);
     });
 }
 
-const splitTxtByRow = function(txt) {
+function splitTxtByRow(txt) {
     const splitedTxt = txt.split(/[\r\n]+/gm);
     return splitedTxt;
 }
 
-const splitTxtByEl = function(txt) {
+function splitTxtByEl(txt) {
     const splitedTxt = txt.split(/"?,?"/ig);
     return splitedTxt;
 }
+      
+function createExcursionItem(title, description, adultPrice, childPrice) {
+    const prototypeExcursionItem = document.querySelector('.excursions__item--prototype');
+    const newExcursionItem = prototypeExcursionItem.cloneNode(true);
+    newExcursionItem.classList.remove('excursions__item--prototype');
+    const newExcursionItemTitle = newExcursionItem.querySelector('.excursions__title');
+    newExcursionItemTitle.innerText = title;
+    const newExcursionItemDescription = newExcursionItem.querySelector('.excursions__description');
+    newExcursionItemDescription.innerText = description;
+    const newExcursionItemAdultInput = newExcursionItem.querySelector('[name="adults"]');
+    const newExcursionItemAdultPrice = newExcursionItemAdultInput.previousElementSibling;
+    newExcursionItemAdultPrice.innerText = adultPrice;
+    const newExcursionItemChildInput = newExcursionItem.querySelector('[name="children"]');
+    const newExcursionItemChildPrice = newExcursionItemChildInput.previousElementSibling;
+    newExcursionItemChildPrice.innerText = childPrice;
 
-const createExcursionEl = function(title, description, adultPrice, childPrice) {
-    const prototypeExcursionEl = document.querySelector('.excursions__item--prototype');
-    const ExcursionEl = prototypeExcursionEl.cloneNode(true);
-    ExcursionEl.classList.remove('excursions__item--prototype');
-    const ExcursionElTitle = ExcursionEl.querySelector('.excursions__title');
-    ExcursionElTitle.innerText = title;
-    const ExcursionElDescription = ExcursionEl.querySelector('.excursions__description');
-    ExcursionElDescription.innerText = description;
-    const ExcursionElAdultInput = ExcursionEl.querySelector('[name="adults"]');
-    const ExcursionElAdultPrice = ExcursionElAdultInput.previousElementSibling;
-    ExcursionElAdultPrice.innerText = adultPrice;
-    const ExcursionElChildInput = ExcursionEl.querySelector('[name="children"]');
-    const ExcursionElChildPrice = ExcursionElChildInput.previousElementSibling;
-    ExcursionElChildPrice.innerText = childPrice;
-
-    return ExcursionEl;
+    addNewExcursionItem(newExcursionItem);
 }
 
-const addNewExcursionEl = function(excursion) {
+function addNewExcursionItem(excursionItem) {
     const panelEl = document.querySelector('.panel__excursions');
-    panelEl.appendChild(excursion);
+    panelEl.appendChild(excursionItem);
 }
 
-const updateBasket = function(e) {
+function excursionItemInputsValidation(e) {
     if(e.target.className.includes('excursions__field-input--submit')) {
         e.preventDefault();
-        const basketObj = createExcursionBasketObj(e.target);
-
-        if(basketObj) {
-            basketArr.push(basketObj);
-            basketArr.forEach(function(el) {
-                creeatBasketEl(el);
-            })
-        }
-    }
-}
-
-const createExcursionBasketObj = function(el) {
-    const excursion = el.parentElement.parentElement.parentElement;
-    const excursionTitleEl = excursion.querySelector('.excursions__title');
-    const excursionPriceElList = excursion.querySelectorAll('.excursions__price');
-    const excursionAdultInptuEl = excursion.querySelectorAll('.excursions__field-input');
-    const errorField = excursion.querySelector('.error__field');
-    errorField.innerHTML = '';
-    const inputPattern = /^[1-9]{1}[0-9]?$/;
+        const excursionItem = e.target.parentElement.parentElement.parentElement;
+        const excursionItemInputsList = excursionItem.querySelectorAll('.excursions__field-input');
+        const excursionItemErrorField = excursionItem.querySelector('.error__field');
+        clearExcursionItemErrorField(excursionItemErrorField);
+        
+        if(bothInputsCorrect(excursionItemInputsList)) {
+            removeErrorBorderColor(excursionItemInputsList[0]);
+            removeErrorBorderColor(excursionItemInputsList[1]);
+            createExcursionObj(excursionItem);
+            clearInputs(excursionItemInputsList);
+                
+        } else if (bothInputsIncorrect(excursionItemInputsList)) {
+            addErrorBorderColor(excursionItemInputsList[0]);
+            addErrorBorderColor(excursionItemInputsList[1]);
+            addErrorField(excursionItemErrorField, 'Provide the correct value (1-99)');
+            
+        } else if (firstInputIncorrect(excursionItemInputsList)) {
+            addErrorBorderColor(excursionItemInputsList[0]);
+            removeErrorBorderColor(excursionItemInputsList[1]);
+            addErrorField(excursionItemErrorField, 'Provide the correct value (1-99)');
     
-    if((inputPattern.test(excursionAdultInptuEl[0].value) && inputPattern.test(excursionAdultInptuEl[1].value)) || (inputPattern.test(excursionAdultInptuEl[0].value) && !excursionAdultInptuEl[1].value) || 
-    (inputPattern.test(excursionAdultInptuEl[1].value) && !excursionAdultInptuEl[0].value)) {
-        const basketObj = {
-            title: excursionTitleEl.innerText,
-            adultPrice: excursionPriceElList[0].innerText,
-            adultAmount: excursionAdultInptuEl[0].value,
-            childPrice: excursionPriceElList[1].innerText,
-            childAmount: excursionAdultInptuEl[1].value,
-        }
-        
-        const panel = document.querySelector('.panel__order');
-        panel.classList.add('panel__order--active');
-
-        clearInputs(excursionAdultInptuEl);
-        changeBorderColor(excursionAdultInptuEl[0], 'none')
-        changeBorderColor(excursionAdultInptuEl[1], 'none')
-       
-        return basketObj
-
-    } else if ((excursionAdultInptuEl[0].value && !inputPattern.test(excursionAdultInptuEl[0].value ) && (excursionAdultInptuEl[1].value && !inputPattern.test(excursionAdultInptuEl[1].value)))) {
-        changeBorderColor(excursionAdultInptuEl[0], 'solid rgb(229 15 15)');
-        changeBorderColor(excursionAdultInptuEl[1], 'solid rgb(229 15 15)');
-        addErrorField(errorField, 'Provide the correct value (1-99)');
-        
-    } else if (excursionAdultInptuEl[0].value && !inputPattern.test(excursionAdultInptuEl[0].value)) {
-        changeBorderColor(excursionAdultInptuEl[0], 'solid rgb(229 15 15)');
-        changeBorderColor(excursionAdultInptuEl[1], 'none')
-        addErrorField(errorField, 'Provide the correct value (1-99)');
-
-    } else if (excursionAdultInptuEl[1].value && !inputPattern.test(excursionAdultInptuEl[1].value)){
-        changeBorderColor(excursionAdultInptuEl[1], 'solid rgb(229 15 15)')
-        changeBorderColor(excursionAdultInptuEl[0], 'none')
-        addErrorField(errorField, 'Provide the correct value (1-99)');
+        } else if (secondInputIncorrect(excursionItemInputsList)) {
+            addErrorBorderColor(excursionItemInputsList[1]);
+            removeErrorBorderColor(excursionItemInputsList[0]);
+            addErrorField(excursionItemErrorField, 'Provide the correct value (1-99)');
+        } 
     }
 }
 
-
-const changeBorderColor = function(el, value) {
-    el.style.border = value;
+function clearExcursionItemErrorField(errorFieldItem) {
+    errorFieldItem.innerHTML = '';
 }
 
-const clearInputs = function(inputList) {
-    inputList[0].value = "";
-    inputList[1].value = "";
+const inputPattern = /^[1-9]{1}[0-9]?$/;
+
+function bothInputsCorrect(excursionItemInputsList) {
+    if((inputPattern.test(excursionItemInputsList[0].value) && inputPattern.test(excursionItemInputsList[1].value)) || (inputPattern.test(excursionItemInputsList[0].value) && !excursionItemInputsList[1].value) || (inputPattern.test(excursionItemInputsList[1].value) && !excursionItemInputsList[0].value)) {
+        return true;
+    }
 }
 
-const calculateExcursionPrice = function (amount, price) {
+function bothInputsIncorrect(excursionItemInputsList) {
+    if ((excursionItemInputsList[0].value && !inputPattern.test(excursionItemInputsList[0].value ) && (excursionItemInputsList[1].value && !inputPattern.test(excursionItemInputsList[1].value)))) {
+        return true;
+    }
+}
+
+function firstInputIncorrect(excursionItemInputsList) {
+    if (excursionItemInputsList[0].value && !inputPattern.test(excursionItemInputsList[0].value)) {
+        return true;
+    }
+}
+
+function secondInputIncorrect(excursionItemInputsList) {
+    if (excursionItemInputsList[1].value && !inputPattern.test(excursionItemInputsList[1].value)) {
+        return true;
+    }
+}
+
+function removeErrorBorderColor(excursionItemInput) {
+    excursionItemInput.classList.remove('error_border_color');
+}
+
+function addErrorBorderColor(excursionItemInput) {
+    excursionItemInput.classList.add('error_border_color');
+}
+
+function clearInputs(excursionItemInputsList) {
+    excursionItemInputsList[0].value = "";
+    excursionItemInputsList[1].value = "";
+}
+
+let basketArr = [];
+
+function createExcursionObj(excursionItem) {
+        const excursionItemTitle = excursionItem.querySelector('.excursions__title');
+        const excursionItemPriceList = excursionItem.querySelectorAll('.excursions__price');
+        const excursionItemInputsList = excursionItem.querySelectorAll('.excursions__field-input');
+        const excursionObj = {
+            title: excursionItemTitle.innerText,
+            adultPrice: excursionItemPriceList[0].innerText,
+            adultAmount: excursionItemInputsList[0].value,
+            childPrice: excursionItemPriceList[1].innerText,
+            childAmount: excursionItemInputsList[1].value,
+        }
+            
+        addExcursionObjToBasketArr(excursionObj);
+        showOrderPanel();
+        createSummaryItems();
+}
+
+function addExcursionObjToBasketArr(obj) {
+    basketArr.push(obj);
+}
+
+function showOrderPanel() {
+    const orderPanel = document.querySelector('.panel__order');
+    orderPanel.classList.add('panel__order--active');
+}
+
+function createSummaryItems() {
+    basketArr.forEach(function(excursionObj) {
+        createSummaryItem(excursionObj);
+    });
+}
+
+function createSummaryItem(excursionObj) {
+    const summaryItemPrototype = document.querySelector('.summary__item--prototype'); 
+    const newSummaryItem = summaryItemPrototype.cloneNode(true); 
+    newSummaryItem.classList.remove('summary__item--prototype');
+    const newSummaryItemTitle = newSummaryItem.querySelector('.summary__name');
+    newSummaryItemTitle.innerText = excursionObj.title;
+    const newsummaryItemPrices = newSummaryItem.querySelector('.summary__prices');
+    
+    if(excursionObj.adultAmount) {
+        const summaryItemPriceAdult = createSummaryItemPriceAdult(excursionObj);
+        newsummaryItemPrices.appendChild(summaryItemPriceAdult);
+    }
+
+    if(excursionObj.childAmount) {
+        const summaryItemPriceChild = createSummaryItemPriceChild(excursionObj);
+        newsummaryItemPrices.appendChild(summaryItemPriceChild);
+    }
+
+    const adultPrice = calculateItemParticipantPrice(excursionObj.adultAmount, excursionObj.adultPrice ); 
+    const childPrice = calculateItemParticipantPrice(excursionObj.childAmount, excursionObj.childPrice );
+
+    const summaryItemTotalPrice = newSummaryItem.querySelector('.summary__total-price');
+    summaryItemTotalPrice.innerText = adultPrice + childPrice + ' PLN';
+
+    addSummaryItem(newSummaryItem);
+}
+
+function createSummaryItemPriceAdult(excursionObj) {
+    const summaryItemPriceAdult = document.createElement('li');
+    summaryItemPriceAdult.classList.add('adultPrice');
+    summaryItemPriceAdult.innerText = 'dorosli: ' + excursionObj.adultAmount + ' x ' + excursionObj.adultPrice + ' PLN';
+
+    return summaryItemPriceAdult;
+}
+
+function createSummaryItemPriceChild(excursionObj) {
+    const summaryItemPriceChild = document.createElement('li');
+        summaryItemPriceChild.classList.add('childPrice');
+        summaryItemPriceChild.innerText = 'dzieci: ' + excursionObj.childAmount + ' x ' + excursionObj.childPrice + ' PLN';
+
+    return summaryItemPriceChild;
+}
+
+function calculateItemParticipantPrice(amount, price) {
     const sum = amount * price;
     return sum;
 }
 
-const countTotal = function (elList) {
-    let sum = 0;
-    elList.forEach(function(el) {
-        if(el.innerText) {
-            sum += parseInt(el.innerText);
-        }
-    })
-    return sum;
-}
-
-const createBasketListElAdult = function(el) {
-    const basketElAdult = document.createElement('li');
-    basketElAdult.classList.add('adultPrice');
-    basketElAdult.innerText = 'dorosli: ' + el.adultAmount + ' x ' + el.adultPrice + ' PLN';
-
-    return basketElAdult;
-}
-
-const createBasketListElChild = function(el) {
-    const basketElchild = document.createElement('li');
-        basketElchild.classList.add('childPrice');
-        basketElchild.innerText = 'dzieci: ' + el.childAmount + ' x ' + el.childPrice + ' PLN';
-
-    return basketElchild;
-}
-
-const creeatBasketEl = function(el) {
-    const summaryItemPrototype = document.querySelector('.summary__item--prototype'); 
-    const newSummaryItem = summaryItemPrototype.cloneNode(true); 
-    newSummaryItem.classList.remove('summary__item--prototype');
-    const newSummaryElTitle = newSummaryItem.querySelector('.summary__name');
-    newSummaryElTitle.innerText = el.title;
-    const newSumaryItemPrices = newSummaryItem.querySelector('.summary__prices');
-
-    if(el.adultAmount && el.adultAmount) {
-        const basketElAdult = createBasketListElAdult(el);
-        newSumaryItemPrices.appendChild(basketElAdult);
-    }
-
-    if(el.childAmount && el.childAmount) {
-        const basketElChild = createBasketListElChild(el);
-        newSumaryItemPrices.appendChild(basketElChild);
-    }
-
-    const adultTotalPrice = calculateExcursionPrice(el.adultAmount, el.adultPrice ); 
-    const childTotalPrice = calculateExcursionPrice(el.childAmount, el.childPrice );
-    const summaryTotalPrice = newSummaryItem.querySelector('.summary__total-price');
-    summaryTotalPrice.innerText = adultTotalPrice + childTotalPrice + ' PLN';
+function addSummaryItem(summaryItem) {
     const summaryPanel = document.querySelector('.summary');
-    summaryPanel.appendChild(newSummaryItem);
+    summaryPanel.appendChild(summaryItem);
+
     updateTotalPrice();
+    clearBasketArr();
+}
+
+function clearBasketArr() {
     basketArr = [];
 }
 
 function removeSummaryItem(e) {
-    let summaryItemParent = panelForm.querySelector('.panel__summary')
-    summaryItemParent = panelForm.querySelector('.panel__summary');
+    const summaryItemsPanel = panelForm.querySelector('.panel__summary')
 
     if(e.target.className === 'summary__btn-remove') {
         e.preventDefault();
-        summaryItemParent.removeChild(e.target.parentElement.parentElement);
+        summaryItemsPanel.removeChild(e.target.parentElement.parentElement);
         updateTotalPrice();
         
-        if(summaryItemParent.lastElementChild.className.includes('summary__item--prototype')){
+        if(summaryItemsPanel.lastElementChild.className.includes('summary__item--prototype')){
             clearPanelErrors();
-            changePanelOrderVisibility();
+            changeSummaryItemsPanelVisibility();
         }
     }
 }
 
-const changePanelOrderVisibility = function() {
-    const panel = document.querySelector('.panel__order');
-    panel.classList.toggle('panel__order--active');
+function updateTotalPrice() {
+    const summaryItemsTotalPrices = document.querySelectorAll('.summary__total-price');
+    const orderTotalPrice = countTotal(summaryItemsTotalPrices);
+    const orderTotalPriceValue = document.querySelector('.order__total-price-value');
+    orderTotalPriceValue.innerText = orderTotalPrice + ' PLN';
 }
 
-const submitValidation = function(e) {
+function clearPanelErrors() {
+    const errorFieldPanel = document.querySelector('.error__field-panel');
+    errorFieldPanel.innerHTML = '';
+}
+
+function changeSummaryItemsPanelVisibility() {
+    const orderPanel = document.querySelector('.panel__order');
+    orderPanel.classList.toggle('panel__order--active');
+}
+
+function submitDetailsValidation(e) {
     if(e.target.value === 'zamawiam') {
         e.preventDefault();
-        const panel = document.querySelector('.panel__order');
         clearPanelErrors();
-        const errorField = document.querySelector('.error__field-panel');
-        
+
+        const orderPanel = document.querySelector('.panel__order');
+        const errorFieldPanel = document.querySelector('.error__field-panel');
         const namePattern = /^[a-z]{2,}\s{1}[a-z]{2,}$/i;
         const emailPattern = /^\w{1}[\w_-]*\w{1}[\w_-]*\w{1}@{1}\w{1}[\w_-]*\w{1}\.{1}\w+$/i;
-        
 
-        if(!namePattern.test(panel.elements.name.value)) {
-            addErrorField(errorField, 'Provide the correct name');
+        if(!namePattern.test(orderPanel.elements.name.value)) {
+            addErrorField(errorFieldPanel, 'Provide the correct name');
         }
 
-        if(!emailPattern.test(panel.elements.email.value)) {
-            addErrorField(errorField, 'Provide the correct email');
+        if(!emailPattern.test(orderPanel.elements.email.value)) {
+            addErrorField(errorFieldPanel, 'Provide the correct email');
         }
 
-        if(namePattern.test(panel.elements.name.value) && emailPattern.test(panel.elements.email.value)) {
-            clearPanelErrors();
+        if(namePattern.test(orderPanel.elements.name.value) && emailPattern.test(orderPanel.elements.email.value)) {
             const excursionsTotalPricesValueEl = document.querySelector('.order__total-price-value');
             const providedEmail = document.querySelector('[name="email"]');
+            const inputsList = orderPanel.querySelectorAll('.order__field-input');
 
-            alert('Dziękujemy za złożenie zamówienia o wartości '+ excursionsTotalPricesValueEl.innerText + '. Szczegóły zamówienia zostały wysłane na adres e-mail: '+ providedEmail.value + '.');
+            alert('Dziękujemy za złożenie zamówienia o wartości ' + excursionsTotalPricesValueEl.innerText + '. Szczegóły zamówienia zostały wysłane na adres e-mail: ' + providedEmail.value + '.');
 
-            const summaryItemParent = panelForm.querySelector('.panel__summary');
-            while(!summaryItemParent.lastElementChild.className.includes('summary__item--prototype')) {
-                summaryItemParent.removeChild(summaryItemParent.lastElementChild);
-            }
- 
-            updateTotalPrice();
-            const inputsList = panel.querySelectorAll('.order__field-input');
             clearInputs(inputsList);
-            changePanelOrderVisibility()
-            const excursionPanel = document.querySelector('.panel__excursions');
-            while(!excursionPanel.lastElementChild.className.includes('excursions__item--prototype')) {
-                excursionPanel.removeChild(excursionPanel.lastElementChild);
-            }
-
-            const uploadButton = document.querySelector('.uploader__input');
-            uploadButton.value=null; 
+            clearPanelErrors();
+            removeSummaryItems();
+            updateTotalPrice();
+            changeSummaryItemsPanelVisibility()
+            removeUploadedFiles();
+            removeExcursionsItems()
         }
     }
 }
 
-const clearPanelErrors = function() {
-    const errorField = document.querySelector('.error__field-panel');
-    errorField.innerHTML = '';
+function removeSummaryItems() {
+    const summaryItemsPanel = panelForm.querySelector('.panel__summary');
+    while(!summaryItemsPanel.lastElementChild.className.includes('summary__item--prototype')) {
+        summaryItemsPanel.removeChild(summaryItemsPanel.lastElementChild);
+    }
 }
 
-const addErrorField = function(parrent, innerText) {
+function removeUploadedFiles() {
+    const uploadButton = document.querySelector('.uploader__input');
+    uploadButton.value=null; 
+}
+
+function addErrorField(parrent, innerText) {
     const nameError = document.createElement('p');
     nameError.innerText = innerText;
     nameError.classList.add('wrong_value_text');
     parrent.appendChild(nameError);
 }
 
-const updateTotalPrice = function() {
-    const excursionsTotalPrices = document.querySelectorAll('.summary__total-price');
-    const total = countTotal(excursionsTotalPrices);
-    const elementTotal = document.querySelector('.order__total-price-value');
-    elementTotal.innerText = total + ' PLN';
+function removeExcursionsItems() {
+    const excursionPanel = document.querySelector('.panel__excursions');
+    while(!excursionPanel.lastElementChild.className.includes('excursions__item--prototype')) {
+        excursionPanel.removeChild(excursionPanel.lastElementChild);
+    }
 }
 
-const uploadButton = document.querySelector('.uploader__input');
-uploadButton.addEventListener('change', uploadExcursions);
-
-const panelForm = document.querySelector('.panel__form'); 
-panelForm.addEventListener('click', removeSummaryItem, true);
-panelForm.addEventListener('click', submitValidation, true);
-
-const excursionsList = document.querySelector('.excursions');
-excursionsList.addEventListener('click', updateBasket, true);
-let basketArr = [];
+function countTotal(summaryItemsTotalPrices) {
+    let sum = 0;
+    summaryItemsTotalPrices.forEach(function(el) {
+        if(el.innerText) {
+            sum += parseInt(el.innerText);
+        }
+    })
+    return sum;
+}
