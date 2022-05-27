@@ -76,17 +76,17 @@ function excursionItemInputsValidation(e) {
         } else if (bothInputsIncorrect(excursionItemInputsList)) {
             addErrorBorderColor(excursionItemInputsList[0]);
             addErrorBorderColor(excursionItemInputsList[1]);
-            addErrorField(excursionItemErrorField, 'Provide the correct value (1-99)');
+            addErrorField(excursionItemErrorField, 'Provide correct value (1-99)');
             
         } else if (firstInputIncorrect(excursionItemInputsList)) {
             addErrorBorderColor(excursionItemInputsList[0]);
             removeErrorBorderColor(excursionItemInputsList[1]);
-            addErrorField(excursionItemErrorField, 'Provide the correct value (1-99)');
+            addErrorField(excursionItemErrorField, 'Provide correct value (1-99)');
     
         } else if (secondInputIncorrect(excursionItemInputsList)) {
             addErrorBorderColor(excursionItemInputsList[1]);
             removeErrorBorderColor(excursionItemInputsList[0]);
-            addErrorField(excursionItemErrorField, 'Provide the correct value (1-99)');
+            addErrorField(excursionItemErrorField, 'Provide correct value (1-99)');
         } 
     }
 }
@@ -190,7 +190,7 @@ function createSummaryItem(excursionObj) {
     const childPrice = calculateItemParticipantPrice(excursionObj.childAmount, excursionObj.childPrice );
 
     const summaryItemTotalPrice = newSummaryItem.querySelector('.summary__total-price');
-    summaryItemTotalPrice.innerText = adultPrice + childPrice + ' PLN';
+    summaryItemTotalPrice.innerText = adultPrice + childPrice;
 
     addSummaryItem(newSummaryItem);
 }
@@ -198,7 +198,7 @@ function createSummaryItem(excursionObj) {
 function createSummaryItemPriceAdult(excursionObj) {
     const summaryItemPriceAdult = document.createElement('li');
     summaryItemPriceAdult.classList.add('adultPrice');
-    summaryItemPriceAdult.innerText = 'dorosli: ' + excursionObj.adultAmount + ' x ' + excursionObj.adultPrice + ' PLN';
+    summaryItemPriceAdult.innerText = 'adults: ' + excursionObj.adultAmount + ' x £' + excursionObj.adultPrice;
 
     return summaryItemPriceAdult;
 }
@@ -206,7 +206,7 @@ function createSummaryItemPriceAdult(excursionObj) {
 function createSummaryItemPriceChild(excursionObj) {
     const summaryItemPriceChild = document.createElement('li');
         summaryItemPriceChild.classList.add('childPrice');
-        summaryItemPriceChild.innerText = 'dzieci: ' + excursionObj.childAmount + ' x ' + excursionObj.childPrice + ' PLN';
+        summaryItemPriceChild.innerText = 'children: ' + excursionObj.childAmount + ' x £' + excursionObj.childPrice;
 
     return summaryItemPriceChild;
 }
@@ -247,7 +247,7 @@ function updateTotalPrice() {
     const summaryItemsTotalPrices = document.querySelectorAll('.summary__total-price');
     const orderTotalPrice = countTotal(summaryItemsTotalPrices);
     const orderTotalPriceValue = document.querySelector('.order__total-price-value');
-    orderTotalPriceValue.innerText = orderTotalPrice + ' PLN';
+    orderTotalPriceValue.innerText = '£' + orderTotalPrice;
 }
 
 function clearPanelErrors() {
@@ -261,7 +261,7 @@ function changeSummaryItemsPanelVisibility() {
 }
 
 function submitDetailsValidation(e) {
-    if(e.target.value === 'zamawiam') {
+    if(e.target.value === 'Buy now') {
         e.preventDefault();
         clearPanelErrors();
 
@@ -271,19 +271,18 @@ function submitDetailsValidation(e) {
         const emailPattern = /^\w{1}[\w_-]*\w{1}[\w_-]*\w{1}@{1}\w{1}[\w_-]*\w{1}\.{1}\w+$/i;
 
         if(!namePattern.test(orderPanel.elements.name.value)) {
-            addErrorField(errorFieldPanel, 'Provide the correct name');
+            addErrorField(errorFieldPanel, 'Provide correct name');
         }
 
         if(!emailPattern.test(orderPanel.elements.email.value)) {
-            addErrorField(errorFieldPanel, 'Provide the correct email');
+            addErrorField(errorFieldPanel, 'Provide correct email');
         }
 
         if(namePattern.test(orderPanel.elements.name.value) && emailPattern.test(orderPanel.elements.email.value)) {
             const excursionsTotalPricesValueEl = document.querySelector('.order__total-price-value');
-            const providedEmail = document.querySelector('[name="email"]');
             const inputsList = orderPanel.querySelectorAll('.order__field-input');
 
-            alert('Dziękujemy za złożenie zamówienia o wartości ' + excursionsTotalPricesValueEl.innerText + '. Szczegóły zamówienia zostały wysłane na adres e-mail: ' + providedEmail.value + '.');
+            alert('Thank you for the order ' + excursionsTotalPricesValueEl.innerText + '.');
 
             clearInputs(inputsList);
             clearPanelErrors();

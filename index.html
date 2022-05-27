@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>JavaScript: Formularze - devmentor.pl</title>
+    <title>JS FORMS</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
   <body>
@@ -19,13 +19,13 @@
           <form class="excursions__form">
             <div class="excursions__field">
               <label class="excursions__field-name">
-                Dorosły: <span class="excursions__price"></span>PLN x
+                Adult: £<span class="excursions__price"></span>  x 
                 <input class="excursions__field-input" name="adults" />
               </label>
             </div>
             <div class="excursions__field">
               <label class="excursions__field-name">
-                Dziecko: <span class="excursions__price"></span>PLN x
+                Child: £<span class="excursions__price"></span> x
                 <input class="excursions__field-input" name="children" />
               </label>
             </div>
@@ -33,7 +33,7 @@
             <div class="excursions__field excursions__field--submit">
               <input
                 class="excursions__field-input excursions__field-input--submit"
-                value="dodaj do zamówinia"
+                value="Add to basket"
                 type="submit"
               />
             </div>
@@ -43,18 +43,18 @@
       <section class="panel__form">
         <div class="panel__uploader uploader">
           <label class="uploader__label">
-            Wybierz plik do wczytania wycieczek:
+            Chose excursions file:
             <input class="uploader__input" type="file" accept=".csv"/>
           </label>
         </div>
         <form class="panel__order order" novalidate>
           <div class="order__total-price">
-            Razem:
+            Total:
             <span class="order__total-price-value"></span>
           </div>
           <div class="order__field">
             <label class="order__field-name">
-              Imię i nazwisko: <input class="order__field-input" name="name" />
+              First name & last name: <input class="order__field-input" name="name" />
             </label>
           </div>
           <div class="order__field">
@@ -67,7 +67,7 @@
           <div class="order__field order__field--submit">
             <input
               class="order__field-input--order order__field-submit"
-              value="zamawiam"
+              value="Buy now"
               type="submit"
             />
           </div>
@@ -75,9 +75,9 @@
         <ul class="panel__summary summary">
           <li class="summary__item summary__item--prototype">
             <h3 class="summary__title">
-              <span class="summary__name"></span>
+              <span class="summary__name"></span>  £
               <strong class="summary__total-price"></strong>
-              <a href="" class="summary__btn-remove" title="usuń">X</a>
+              <a href="" class="summary__btn-remove" title="remove">X</a>
             </h3>
             <ul class="summary__prices"></ul>
           </li>

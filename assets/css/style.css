@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(87deg, rgba(131,58,180,1) 26%, rgba(69,124,252,1) 67%);
+    background: linear-gradient(87deg, rgba(131, 58, 180, 1) 26%, rgba(69, 124, 252, 1) 67%);
 }
 
 ul {
@@ -31,14 +31,13 @@ ul {
     flex-wrap: wrap;
 }
 
-
 .excursions__item {
     background: rgb(36, 108, 196);
     border-radius: 20px;
     box-shadow: rgb(17, 17, 17) 0px 0px 15px 1px;
-    display: flex ;
+    display: flex;
     flex-wrap: wrap;
-    justify-content: center;  
+    justify-content: center;
     line-height: 1.5;
     margin: 10px;
     padding: 20px;
@@ -73,7 +72,7 @@ ul {
 .excursions__field-name {
     background: rgb(14, 84, 170);
     border-radius: 10px;
-    box-shadow: silver 0px 0px 3px 1px ;
+    box-shadow: silver 0px 0px 3px 1px;
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -97,18 +96,20 @@ ul {
     background-color: rgb(112, 68, 153);
     border-radius: 20px;
     border: none;
-    box-shadow: silver 0px 0px 3px 1px ;
+    box-shadow: silver 0px 0px 3px 1px;
     color: rgb(250, 250, 246);
     padding: 12px;
     width: max-content;
 }
 
-.excursions__field-input--submit:hover, .order__field-input--order:hover {
+.excursions__field-input--submit:hover,
+.order__field-input--order:hover {
     box-shadow: 0px 0px 10px 1px;
     transition: 100ms;
 }
 
-.excursions__field-input--submit:active, .order__field-input--order:active {
+.excursions__field-input--submit:active,
+.order__field-input--order:active {
     transform: translateY(4px);
 }
 
@@ -137,7 +138,8 @@ ul {
     padding: 30px 0;
 }
 
-.uploader, .order {
+.uploader,
+.order {
     border-bottom: 1px solid #bbb;
 }
 
@@ -147,7 +149,9 @@ ul {
 }
 
 .summary__item {
-    display: block;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     padding: 10px;
 }
 
@@ -164,10 +168,6 @@ ul {
     list-style: square;
 }
 
-.childPrice, .adultPrice {
-    padding-left: 20px;
-}
-
 .summary__btn-remove {
     color: rgba(255, 0, 0, 0.603);
     font-size: 15px;
@@ -175,15 +175,15 @@ ul {
     vertical-align: text-top;
 }
 
-.order__field-input--order{
+.order__field-input--order {
     background-color: rgb(14, 84, 170);
     border-radius: 20px;
     border: none;
-    box-shadow: silver 0px 0px 3px 1px ;
+    box-shadow: silver 0px 0px 3px 1px;
     color: rgba(255, 255, 255, 0.849);
     display: flex;
     font-size: 20px;
-    font-weight: bold ;
+    font-weight: bold;
     justify-content: center;
     padding: 10px 30px;
     padding: 12px;
@@ -218,6 +218,7 @@ ul {
     font-weight: bold;
     margin: 0 auto;
 }
+
 .order__field-name {
     display: flex;
     justify-content: space-between;
@@ -234,7 +235,7 @@ ul {
     gap: 10px;
 }
 
-.error__field-panel > p {
+.error__field-panel>p {
     color: rgb(244 96 96);
     font-size: 15px;
 }
@@ -246,10 +247,6 @@ ul {
     padding: 20px;
 }
 
-
-
 .error_border_color {
     border: solid rgb(229 15 15);
 }
-
-
